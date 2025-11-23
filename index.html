@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congratulations Hanifah!</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'soft-pink': '#FFF0F5',     
+                        'soft-white': '#FFFAFA',    
+                        'dusty-rose': '#8E7078',    
+                        'pastel-pink': '#FFC4D6',   
+                        'pastel-hover': '#FFB6C1',  
+                        'muted-gray': '#6B6B6B',    
+                    },
+                    fontFamily: {
+                        'playfair': ['"Playfair Display"', 'serif'],
+                        'poppins': ['"Poppins"', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 8s ease-in-out infinite',
+                        'popup': 'popup 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'fade-in': 'fadeIn 1s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        popup: {
+                            '0%': { opacity: '0', transform: 'translateY(40px) scale(0.95)' },
+                            '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #FFC4D6; border-radius: 10px; }
+        body::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-soft-pink via-white to-rose-50 min-h-screen flex items-center justify-center overflow-hidden relative font-poppins selection:bg-pastel-pink selection:text-white">
+
+    <!-- Background Decorations -->
+    <div class="absolute top-[-10%] left-[-10%] w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-delayed"></div>
+    <div class="absolute top-[40%] left-[60%] w-64 h-64 bg-rose-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
+
+    <main class="relative z-10 w-full max-w-md px-6">
+        
+        <!-- CARD 1: Intro (Foto Profil) -->
+        <div id="intro-card" class="glass-panel rounded-[40px] p-8 md:p-12 text-center shadow-2xl shadow-pink-100/50 transform opacity-0 animate-popup">
+            
+            <!-- Foto Profil Area -->
+            <div class="relative mx-auto mb-6 group">
+                <!-- Lingkaran Foto -->
+                <div class="w-32 h-32 mx-auto rounded-full bg-white p-1 shadow-lg ring-4 ring-pink-50 flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-105">
+                    
+                    <!-- GANTI FOTO DI SINI -->
+                    <!-- Cara ganti: Ubah 'https://images.unsplash.com/...' dengan nama file fotomu, misal 'hanifah.jpg' -->
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=250&h=250&auto=format&fit=crop" 
+                         alt="Foto Hanifah" 
+                         class="w-full h-full object-cover rounded-full hover:opacity-90 transition-opacity">
+                         
+                </div>
+                
+                <!-- Badge Level 24 -->
+                <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-pastel-pink to-pink-400 text-white px-4 py-1 rounded-full shadow-md border-2 border-white z-10">
+                    <span class="font-poppins font-semibold text-xs tracking-wider">LVL. 24</span>
+                </div>
+            </div>
+
+            <h1 class="font-playfair font-bold italic text-3xl md:text-4xl text-dusty-rose mb-3 leading-tight pt-4">
+                Congratulations!
+            </h1>
+            
+            <p class="text-muted-gray text-sm md:text-base leading-relaxed mb-8 px-2 font-medium">
+                You reached level 24 this time! 🌟
+            </p>
+
+            <button onclick="revealMessage()" class="group relative inline-flex items-center justify-center px-8 py-3.5 text-white transition-all duration-300 bg-pastel-pink rounded-full hover:bg-pastel-hover hover:shadow-lg hover:shadow-pink-200 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-200">
+                <span class="font-medium tracking-wide text-sm md:text-base">Unlock Message</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-2 transition-transform duration-300 group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- CARD 2: The Letter -->
+        <div id="letter-card" class="hidden glass-panel rounded-[40px] p-8 md:p-10 text-center shadow-2xl shadow-pink-100/50">
+            <div class="animate-fade-in">
+                
+                <div class="flex items-center justify-center space-x-2 mb-5">
+                    <span class="h-px w-8 bg-pastel-pink"></span>
+                    <span class="text-pastel-pink text-xl">✨</span>
+                    <span class="h-px w-8 bg-pastel-pink"></span>
+                </div>
+
+                <!-- Isi Surat -->
+                <div class="text-muted-gray text-sm md:text-[0.95rem] leading-loose text-left space-y-4 bg-white/40 p-6 rounded-2xl border border-white mb-6 max-h-[60vh] overflow-y-auto custom-scroll">
+                    <p class="font-playfair font-semibold text-dusty-rose text-lg">Hai,</p>
+                    
+                    <p>Mungkin sudah lama aku tidak menuliskan sesuatu untukmu.</p>
+                    
+                    <p>Hari ini <span class="font-medium text-dusty-rose">sudah 24 Tahun berlalu</span>, setelah hari pertama kamu dilahirkan. Kamu mungkin salah satu manusia yang beruntung bisa dilahirkan di dunia, kamu tumbuh dan berkembang jadi sosok wanita yang <span class="italic text-dusty-rose">cantik dan hebat</span>.</p>
+                    
+                    <p>Aku gatau pasti apa yang sebenarnya kamu inginkan atau butuhkan, tapi semoga semua hal-hal yang kamu inginkan lekas <span class="font-medium">segera terwujud dan tercapai ya</span>.</p>
+                    
+                    <p>Bahkan di usiamu yang semakin bertambah, aku masih saja belum memberikan hal-hal istimewa untukmu. Aku hanya bisa berharap dan berusaha untuk selalu <span class="italic">menjadi yang terbaik untukmu</span>.</p>
+                    
+                    <p class="pt-2 border-t border-pink-100">Terimakasih sudah ada sampai saat ini. Aku tidak tau apa yang harus aku tulis lagi, yang pasti sehat selalu, baik selalu, dan semoga senantiasa selalu dalam <span class="font-medium text-dusty-rose">perlindungan-Nya</span>.</p>
+                </div>
+
+                <button onclick="closeMessage()" class="text-sm text-dusty-rose hover:text-pastel-pink font-medium transition-colors underline underline-offset-4">
+                    Tutup Kembali
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function revealMessage() {
+            const introCard = document.getElementById('intro-card');
+            const letterCard = document.getElementById('letter-card');
+
+            introCard.style.transition = 'all 0.5s ease';
+            introCard.style.opacity = '0';
+            introCard.style.transform = 'scale(0.9)';
+            
+            setTimeout(() => {
+                introCard.classList.add('hidden');
+                letterCard.classList.remove('hidden');
+                
+                letterCard.style.opacity = '0';
+                letterCard.style.transform = 'translateY(20px)';
+                
+                void letterCard.offsetWidth;
+
+                letterCard.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+                letterCard.style.opacity = '1';
+                letterCard.style.transform = 'translateY(0)';
+            }, 400);
+        }
+
+        function closeMessage() {
+            const introCard = document.getElementById('intro-card');
+            const letterCard = document.getElementById('letter-card');
+
+            letterCard.style.transition = 'all 0.5s ease';
+            letterCard.style.opacity = '0';
+            letterCard.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                letterCard.classList.add('hidden');
+                introCard.classList.remove('hidden');
+                
+                void introCard.offsetWidth;
+
+                introCard.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+                introCard.style.opacity = '1';
+                introCard.style.transform = 'scale(1)';
+            }, 400);
+        }
+    </script>
+</body>
+</html>
