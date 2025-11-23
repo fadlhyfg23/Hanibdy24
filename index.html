@@ -265,9 +265,13 @@
                 content.classList.remove('animate-modal-pop');
             }, 300);
         }
-        document.getElementById('photo-modal').addEventListener('click', function(e) {
+        document.addEventListener('DOMContentLoaded', function() {
+    var photoModal = document.getElementById('photo-modal');
+    if (photoModal) {
+        photoModal.addEventListener('click', function(e) {
             if (e.target === this) closePhotoModal();
         });
+    });
 
         // --- LOGIKA BUKA PESAN ---
         function revealMessage() {
