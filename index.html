@@ -39,11 +39,12 @@
                         'popup': 'popup 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                         'fade-in': 'fadeIn 1s ease-out forwards',
                         'modal-pop': 'modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'shake': 'shake 0.4s cubic-bezier(.36,.07,.19,.97) both', // tambahkan shake
                     },
                     keyframes: {
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-15px)' }, /* Gerakan dikurangi biar gak offscreen */
+                            '50%': { transform: 'translateY(-15px)' }, 
                         },
                         popup: {
                             '0%': { opacity: '0', transform: 'translateY(30px) scale(0.95)' },
@@ -56,6 +57,12 @@
                         modalPop: {
                             '0%': { opacity: '0', transform: 'scale(0.85)' },
                             '100%': { opacity: '1', transform: 'scale(1)' },
+                        },
+                        shake: {
+                            '10%, 90%': { transform: 'translateX(-2px)' },
+                            '20%, 80%': { transform: 'translateX(4px)' },
+                            '30%, 50%, 70%': { transform: 'translateX(-8px)' },
+                            '40%, 60%': { transform: 'translateX(8px)' },
                         }
                     }
                 }
@@ -64,13 +71,12 @@
     </script>
 
     <style>
-        /* --- KUNCI LAYAR BIAR GAK GESER --- */
         html, body {
             width: 100%;
             height: 100%;
-            overflow: hidden; /* Mematikan scroll bar sepenuhnya */
-            position: fixed; /* Mengunci body agar tidak bisa didrag di mobile */
-            touch-action: none; /* Mencegah zoom/pan default */
+            overflow: hidden;
+            position: fixed;
+            touch-action: none;
         }
 
         .glass-panel {
@@ -80,15 +86,13 @@
             border: 1px solid rgba(255, 255, 255, 0.9);
         }
 
-        /* Scrollbar khusus untuk area surat (tetap bisa discroll isinya) */
         .custom-scroll {
-            touch-action: pan-y; /* Mengizinkan scroll vertikal di area ini saja */
+            touch-action: pan-y;
         }
         .custom-scroll::-webkit-scrollbar { width: 3px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #FFC4D6; border-radius: 10px; }
 
-        /* Animasi Balon */
         @keyframes floatUp {
             0% { transform: translateY(110vh) scale(0.5); opacity: 0; }
             10% { opacity: 1; }
@@ -98,11 +102,10 @@
             position: fixed;
             bottom: -10vh;
             animation: floatUp linear forwards;
-            z-index: 50; /* Di atas kartu tapi di bawah modal */
+            z-index: 50;
             pointer-events: none;
         }
 
-        /* Animasi Teks */
         .reveal-text {
             opacity: 0;
             transform: translateY(10px);
@@ -118,12 +121,12 @@
 </head>
 <body class="bg-gradient-to-br from-soft-pink via-white to-rose-50 w-full h-full flex items-center justify-center font-poppins selection:bg-pastel-pink selection:text-white">
 
-    <!-- Background Decorations (Diposisikan absolute agar tidak mempengaruhi layout) -->
+    <!-- Background Decorations -->
     <div class="absolute top-[-5%] left-[-5%] w-48 h-48 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
     <div class="absolute bottom-[-5%] right-[-5%] w-64 h-64 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" style="animation-delay: 2s"></div>
 
     <!-- Container Utama -->
-    <main class="relative z-10 w-full max-w-[350px] px-4"> <!-- Max width dibatasi 350px agar pas di HP -->
+    <main class="relative z-10 w-full max-w-[350px] px-4">
         
         <!-- HALAMAN 1: INTRO -->
         <div id="intro-card" class="glass-panel rounded-[30px] p-6 text-center shadow-xl shadow-pink-100/40 transform opacity-0 animate-popup">
@@ -146,9 +149,9 @@
                 </div>
                 
                 <!-- Badge Level -->
-                <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-pastel-pink to-pink-400 text-white px-3 py-1 rounded-full shadow-md border-2 border-white z-20 whitespace-nowrap">
+                <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-pastel-pink to-pink-400 text-white px-3 py-1 rounded-full shadow-md border-2 border-white z-20 ">
                     <span class="font-poppins font-semibold text-[10px] md:text-xs tracking-wider">LVL. 24</span>
-				</div>
+                </div>
             </div>
 
             <h1 class="font-playfair font-bold italic text-2xl text-dusty-rose mb-2 leading-tight pt-1">
@@ -159,13 +162,27 @@
                 You reached level 24 this time! 🌟
             </p>
 
-            <button onclick="revealMessage()" class="w-full py-3 text-white bg-pastel-pink rounded-full hover:bg-pastel-hover active:scale-95 transition-all shadow-md shadow-pink-100 font-medium text-sm flex items-center justify-center gap-2">
-                <span>Unlock Message</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-            </button>
+            <!-- PASSWORD FORM (Ganti tombol Unlock Message) -->
+            <form id="unlock-form" autocomplete="off" class="w-full flex flex-col gap-3 items-center" onsubmit="handlePassword(event)">
+                <input 
+                    type="password"
+                    id="password-input"
+                    class="w-full px-4 py-3 border border-pastel-pink rounded-full text-muted-gray focus:outline-none focus:ring-2 focus:ring-pastel-pink text-[15px] bg-white placeholder:text-pastel-hover transition-all"
+                    placeholder="Enter password"
+                    autocomplete="new-password"
+                    required
+                >
+                <button type="submit"
+                    id="unlock-btn"
+                    class="w-full py-3 text-white bg-pastel-pink rounded-full hover:bg-pastel-hover active:scale-95 transition-all shadow-md shadow-pink-100 font-medium text-[15px] flex items-center justify-center gap-2"
+                >
+                    <span>Unlock Message</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </button>
+            </form>
         </div>
 
         <!-- HALAMAN 2: SURAT -->
@@ -180,10 +197,10 @@
             <div class="text-muted-gray text-xs md:text-sm leading-loose text-left space-y-3 bg-white/50 p-4 rounded-2xl border border-white mb-4 max-h-[50vh] overflow-y-auto custom-scroll">
                 <p class="reveal-text font-playfair font-bold text-dusty-rose text-base">Hai,</p>
                 <p class="reveal-text">Mungkin sudah lama aku tidak menuliskan sesuatu untukmu.</p>
-                <p class="reveal-text">Hari ini <span class="font-bold text-dusty-rose">sudah 24 Tahun berlalu</span>, sejak hari pertama kamu dilahirkan. Kamu tumbuh jadi wanita yang <span class="italic text-dusty-rose">cantik dan hebat</span>.</p>
+                <p class="reveal-text">Hari ini <span class="font-bold text-dusty-rose">sudah 24 Tahun berlalu</span>, sejak hari pertama kamu dilahirkan. Kamu tumbuh jadi wanita yang <span class="italic">sangat kuat, sabar, dan penuh kasih sayang</span>.</p>
                 <p class="reveal-text">Semoga semua hal yang kamu inginkan lekas <span class="font-bold">segera terwujud dan tercapai ya</span>.</p>
-                <p class="reveal-text">Bahkan di usiamu yang bertambah, aku masih belum memberikan hal istimewa. Aku hanya bisa berusaha untuk selalu <span class="italic">menjadi yang terbaik buatmu</span>.</p>
-                <p class="reveal-text pt-2 border-t border-pink-100 mt-2">Terimakasih sudah ada sampai saat ini. Sehat selalu, baik selalu, dan semoga senantiasa dalam <span class="font-bold text-dusty-rose">perlindungan-Nya</span>.</p>
+                <p class="reveal-text">Bahkan di usiamu yang bertambah, aku masih belum memberikan hal istimewa. Aku hanya bisa berusaha untuk selalu <span class="italic">menjadi yang terbaik buatmu</span>. Maaf kalau kadang masih banyak kurangnya.</p>
+                <p class="reveal-text pt-2 border-t border-pink-100 mt-2">Terimakasih sudah ada sampai saat ini. Sehat selalu, baik selalu, dan semoga senantiasa dalam <span class="font-bold text-dusty-rose">lindungan-Nya</span>.</p>
             </div>
             
             <button onclick="closeMessage()" class="text-xs text-dusty-rose hover:text-pastel-pink font-bold underline underline-offset-4 p-2">
@@ -209,7 +226,6 @@
             
             <!-- FOTO DI POPUP (Ukuran Pas Layar HP) -->
             <div class="rounded-[15px] overflow-hidden border border-pink-50 bg-pink-50">
-                <!-- Menggunakan max-h-[60vh] agar tidak terlalu panjang ke bawah -->
                 <img src="hanifah.jpg" 
                      alt="Hanifah Besar" 
                      class="w-full h-auto object-contain max-h-[50vh] mx-auto">
@@ -225,7 +241,6 @@
 
     <script>
         // --- CONFIG ---
-        // Mencegah scroll default di body (Touch Action None di CSS sudah bantu, ini backup)
         document.body.addEventListener('touchmove', function(e) {
             if (!e.target.closest('.custom-scroll')) {
                 e.preventDefault();
@@ -247,7 +262,7 @@
                 b.innerText = emojis[Math.floor(Math.random() * emojis.length)];
                 b.className = 'balloon';
                 b.style.left = Math.random() * 90 + 'vw';
-                b.style.fontSize = (Math.random() * 1 + 1.5) + 'rem'; // Ukuran balon variasi
+                b.style.fontSize = (Math.random() * 1 + 1.5) + 'rem';
                 b.style.animationDuration = (Math.random() * 2 + 4) + 's'; 
                 document.body.appendChild(b);
                 setTimeout(() => b.remove(), 6000);
@@ -261,7 +276,6 @@
             
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            // Timeout kecil untuk transisi CSS
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
                 content.classList.remove('scale-90');
@@ -284,12 +298,30 @@
             }, 300);
         }
 
+        // --- PASSWORD UNLOCK ---
+        function handlePassword(e) {
+            e.preventDefault();
+            const form = document.getElementById('unlock-form');
+            const input = document.getElementById('password-input');
+            const value = input.value.trim();
+            if (value === 'hani24th') {
+                input.value = '';
+                input.blur();
+                revealMessage();
+            } else {
+                input.value = '';
+                form.classList.add('animate-shake');
+                setTimeout(() => {
+                    form.classList.remove('animate-shake');
+                }, 400); // match shake duration
+            }
+        }
+
         // --- CARD TRANSITION ---
         function revealMessage() {
             const intro = document.getElementById('intro-card');
             const letter = document.getElementById('letter-card');
             
-            // Fade out Intro
             intro.style.transition = 'all 0.4s ease';
             intro.style.opacity = '0';
             intro.style.transform = 'scale(0.95)';
@@ -297,20 +329,13 @@
             setTimeout(() => {
                 intro.classList.add('hidden');
                 letter.classList.remove('hidden');
-                
-                // Reset state letter
                 letter.style.opacity = '0';
                 letter.style.transform = 'translateY(20px)';
-                
                 releaseBalloons();
-                
-                // Fade in Letter
                 requestAnimationFrame(() => {
                     letter.style.transition = 'all 0.5s ease';
                     letter.style.opacity = '1';
                     letter.style.transform = 'translateY(0)';
-                    
-                    // Animate Text
                     const texts = document.querySelectorAll('.reveal-text');
                     texts.forEach((el, i) => {
                         el.classList.remove('visible');
@@ -331,7 +356,6 @@
             setTimeout(() => {
                 letter.classList.add('hidden');
                 intro.classList.remove('hidden');
-                
                 requestAnimationFrame(() => {
                     intro.style.transition = 'all 0.5s ease';
                     intro.style.opacity = '1';
@@ -342,4 +366,3 @@
     </script>
 </body>
 </html>
-
