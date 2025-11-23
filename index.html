@@ -13,6 +13,9 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Library Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <!-- Tailwind Config -->
     <script>
         tailwind.config = {
@@ -35,6 +38,8 @@
                         'float-delayed': 'float 8s ease-in-out infinite',
                         'popup': 'popup 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                         'fade-in': 'fadeIn 1s ease-out forwards',
+                        'modal-pop': 'modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
                     },
                     keyframes: {
                         float: {
@@ -48,6 +53,14 @@
                         fadeIn: {
                             '0%': { opacity: '0' },
                             '100%': { opacity: '1' },
+                        },
+                        modalPop: {
+                            '0%': { opacity: '0', transform: 'scale(0.8)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
                         }
                     }
                 }
@@ -66,22 +79,33 @@
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #FFC4D6; border-radius: 10px; }
         body::-webkit-scrollbar { display: none; }
-        /* Modal popup styles */
-        .modal {
-            z-index: 50;
-            display: none;
+        
+        img { user-select: none; -webkit-user-drag: none; }
+
+        /* Animasi Balon Terbang */
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-20vh) scale(1.2); opacity: 0; }
+        }
+        .balloon {
             position: fixed;
-            inset: 0;
-            align-items: center;
-            justify-content: center;
+            bottom: -10vh;
+            font-size: 2rem;
+            animation: floatUp linear forwards;
+            z-index: 5; /* Di belakang kartu surat tapi di depan background */
+            pointer-events: none;
         }
-        .modal.open {
-            display: flex;
-            animation: pop-in .3s cubic-bezier(.16,1,.3,1);
+
+        /* Kelas untuk menyembunyikan paragraf sebelum muncul */
+        .reveal-text {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.8s ease;
         }
-        @keyframes pop-in {
-            0% { opacity: 0; transform: scale(0.95);}
-            100% { opacity: 1; transform: scale(1);}
+        .reveal-text.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -94,24 +118,24 @@
 
     <main class="relative z-10 w-full max-w-md px-6">
         
-        <!-- CARD 1: Intro (Foto Profil) -->
+        <!-- CARD 1: Intro -->
         <div id="intro-card" class="glass-panel rounded-[40px] p-8 md:p-12 text-center shadow-2xl shadow-pink-100/50 transform opacity-0 animate-popup">
             
-            <!-- Foto Profil Area -->
             <div class="relative mx-auto mb-6 group">
-                <!-- Lingkaran Foto -->
-                <div class="w-32 h-32 mx-auto rounded-full bg-white p-1 shadow-lg ring-4 ring-pink-50 flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-105 cursor-pointer"
-                    id="profile-photo-btn"
-                    title="Klik untuk perbesar foto"
-                >
-                    <!-- GANTI FOTO DI SINI -->
+                <div class="w-32 h-32 mx-auto rounded-full bg-white p-1 shadow-lg ring-4 ring-pink-50 flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-105 cursor-pointer relative z-10"
+                    onclick="openPhotoModal()"
+                    title="Klik untuk lihat foto">
+                    
                     <img src="Picsart_25-11-23_23-43-35-215.jpg" 
                          alt="Foto Hanifah" 
                          class="w-full h-full object-cover rounded-full hover:opacity-90 transition-opacity">
+                         
+                    <div class="absolute inset-0 bg-black/20 hidden group-hover:flex items-center justify-center rounded-full transition-all">
+                        <span class="text-white text-xs">Lihat</span>
+                    </div>
                 </div>
                 
-                <!-- Badge Level 24 -->
-                <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-pastel-pink to-pink-400 text-white px-4 py-1 rounded-full shadow-md border-2 border-white z-10">
+                <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-pastel-pink to-pink-400 text-white px-4 py-1 rounded-full shadow-md border-2 border-white z-20">
                     <span class="font-poppins font-semibold text-xs tracking-wider">LVL. 24</span>
                 </div>
             </div>
@@ -124,7 +148,7 @@
                 You reached level 24 this time! 🌟
             </p>
 
-            <button onclick="revealMessage()" class="group relative inline-flex items-center justify-center px-8 py-3.5 text-white transition-all duration-300 bg-pastel-pink rounded-full hover:bg-pastel-hover focus:outline-none shadow-lg shadow-pink-100/50 font-poppins">
+            <button onclick="revealMessage()" class="group relative inline-flex items-center justify-center px-8 py-3.5 text-white transition-all duration-300 bg-pastel-pink rounded-full hover:bg-pastel-hover hover:shadow-lg hover:shadow-pink-200 hover:-translate-y-1 focus:outline-none shadow-lg shadow-pink-100/50 font-poppins">
                 <span class="font-medium tracking-wide text-sm md:text-base">Unlock Message</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-2 transition-transform duration-300 group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -141,14 +165,18 @@
                     <span class="text-pastel-pink text-xl">✨</span>
                     <span class="h-px w-8 bg-pastel-pink"></span>
                 </div>
-                <div class="text-muted-gray text-sm md:text-[0.95rem] leading-loose text-left space-y-4 bg-white/40 p-6 rounded-2xl border border-white mb-6 max-h-[60vh] overflow-y-auto custom-scroll">
-                    <p class="font-playfair font-semibold text-dusty-rose text-lg">Hai,</p>
-                    <p>Mungkin sudah lama aku tidak menuliskan sesuatu untukmu.</p>
-                    <p>Hari ini <span class="font-medium text-dusty-rose">sudah 24 Tahun berlalu</span>, setelah hari pertama kamu dilahirkan. Kamu mungkin salah satu manusia yang beruntung bisa dilahirkan di dunia, dan semoga kamu tetap bersyukur.</p>
-                    <p>Aku gatau pasti apa yang sebenarnya kamu inginkan atau butuhkan, tapi semoga semua hal-hal yang kamu inginkan lekas <span class="font-medium">segera terwujud dan tercapai ya</span>.</p>
-                    <p>Bahkan di usiamu yang semakin bertambah, aku masih saja belum memberikan hal-hal istimewa untukmu. Aku hanya bisa berharap dan berusaha untuk selalu <span class="italic">menjadi yang baik buatmu</span>.</p>
-                    <p class="pt-2 border-t border-pink-100">Terimakasih sudah ada sampai saat ini. Aku tidak tau apa yang harus aku tulis lagi, yang pasti sehat selalu, baik selalu, dan semoga senantiasa dalam lindungan Tuhan. 🤍</p>
+                
+                <!-- Container Surat dengan ID untuk JS -->
+                <div id="letter-content" class="text-muted-gray text-sm md:text-[0.95rem] leading-loose text-left space-y-4 bg-white/40 p-6 rounded-2xl border border-white mb-6 max-h-[60vh] overflow-y-auto custom-scroll">
+                    <!-- Paragraf diberi class reveal-text -->
+                    <p class="reveal-text font-playfair font-semibold text-dusty-rose text-lg">Hai,</p>
+                    <p class="reveal-text">Mungkin sudah lama aku tidak menuliskan sesuatu untukmu.</p>
+                    <p class="reveal-text">Hari ini <span class="font-medium text-dusty-rose">sudah 24 Tahun berlalu</span>, sejak hari pertama kamu dilahirkan. Kamu mungkin salah satu manusia yang beruntung bisa dilahirkan di dunia, dan semoga kamu tetap bersyukur.</p>
+                    <p class="reveal-text">Aku gatau pasti apa yang sebenarnya kamu inginkan atau butuhkan, tapi semoga semua hal-hal yang kamu inginkan lekas <span class="font-medium">segera terwujud dan tercapai ya</span>.</p>
+                    <p class="reveal-text">Bahkan di usiamu yang semakin bertambah, aku masih saja belum memberikan hal-hal istimewa untukmu. Aku hanya bisa berharap dan berusaha untuk selalu <span class="italic">menjadi yang baik buatmu</span>.</p>
+                    <p class="reveal-text pt-2 border-t border-pink-100">Terimakasih sudah ada sampai saat ini. Aku tidak tau apa yang harus aku tulis lagi, yang pasti sehat selalu, baik selalu, dan semoga senantiasa dalam lindungan-Nya. 🤍</p>
                 </div>
+                
                 <button onclick="closeMessage()" class="text-sm text-dusty-rose hover:text-pastel-pink font-medium transition-colors underline underline-offset-4">
                     Tutup Kembali
                 </button>
@@ -158,43 +186,95 @@
     </main>
 
     <!-- MODAL PHOTO POPUP -->
-    <div id="modal-overlay" class="modal fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-        <div class="relative">
-            <img src="Picsart_25-11-23_23-43-35-215.jpg" alt="Popup Hanifah" class="max-w-xs md:max-w-md rounded-3xl shadow-2xl border-4 border-white transition-all duration-300">
-            <button id="modal-close" aria-label="Close" class="absolute top-2 right-2 bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-1 shadow cursor-pointer border border-gray-200 transition-all">
-                <svg class="w-6 h-6 text-dusty-rose" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+    <div id="photo-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4 transition-all duration-300 opacity-0">
+        <div class="relative max-w-sm w-full transform scale-90 transition-all duration-300" id="modal-content">
+            <button onclick="closePhotoModal()" class="absolute -top-4 -right-4 bg-white text-dusty-rose rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors z-10">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
+            <div class="bg-white p-2 rounded-[30px] shadow-2xl shadow-pink-500/20 rotate-1 hover:rotate-0 transition-transform duration-500">
+                <img src="5fb57210-8621-4aae-974b-f9ee8d9bfb58-1_all_72103.jpg" 
+                     alt="Hanifah Besar" 
+                     class="w-full h-auto rounded-[25px] object-cover aspect-square border border-pink-50">
+            </div>
+            <div class="text-center mt-4">
+                <span class="bg-white/90 text-dusty-rose px-4 py-1 rounded-full text-sm font-playfair font-bold shadow-lg inline-block">
+                    The Birthday Girl 🎂
+                </span>
+            </div>
         </div>
     </div>
 
     <script>
-        // Hide modal on load
-        document.getElementById("modal-overlay").classList.remove("open");
+        // --- LOGIKA CONFETTI ---
+        function fireConfetti() {
+            const colors = ['#FFC4D6', '#FFB6C1', '#FFF0F5', '#FFD700', '#FFFFFF'];
+            confetti({ particleCount: 60, angle: 60, spread: 55, origin: { x: 0, y: 0.8 }, colors: colors });
+            confetti({ particleCount: 60, angle: 120, spread: 55, origin: { x: 1, y: 0.8 }, colors: colors });
+        }
 
-        // Buka modal saat foto diklik
-        document.getElementById("profile-photo-btn").addEventListener("click", function() {
-            document.getElementById("modal-overlay").classList.add("open");
-        });
+        // --- LOGIKA BALON ---
+        function releaseBalloons() {
+            const balloonContainer = document.body;
+            const emojis = ['🎈', '🎂', '✨', '🤍', '🎀'];
+            
+            for (let i = 0; i < 15; i++) {
+                const balloon = document.createElement('div');
+                balloon.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                balloon.classList.add('balloon');
+                
+                // Random posisi dan kecepatan
+                balloon.style.left = Math.random() * 100 + 'vw';
+                balloon.style.animationDuration = (Math.random() * 3 + 4) + 's'; // 4-7 detik
+                balloon.style.fontSize = (Math.random() * 1.5 + 1.5) + 'rem';
+                
+                balloonContainer.appendChild(balloon);
 
-        // Tutup modal saat tombol close diklik atau klik di overlay
-        document.getElementById("modal-close").addEventListener("click", function(event) {
-            event.stopPropagation();
-            document.getElementById("modal-overlay").classList.remove("open");
-        });
-
-        document.getElementById("modal-overlay").addEventListener("click", function(event) {
-            if (event.target === this) {
-                this.classList.remove("open");
+                // Hapus elemen setelah animasi selesai agar tidak berat
+                setTimeout(() => {
+                    balloon.remove();
+                }, 7000);
             }
+        }
+
+        // --- LOGIKA MODAL ---
+        function openPhotoModal() {
+            const modal = document.getElementById('photo-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-90');
+                content.classList.add('scale-100');
+                content.classList.add('animate-modal-pop');
+            }, 10);
+            fireConfetti();
+        }
+
+        function closePhotoModal() {
+            const modal = document.getElementById('photo-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-90');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                content.classList.remove('animate-modal-pop');
+            }, 300);
+        }
+        document.getElementById('photo-modal').addEventListener('click', function(e) {
+            if (e.target === this) closePhotoModal();
         });
 
-        // Animasi popup card tetap
+        // --- LOGIKA BUKA PESAN ---
         function revealMessage() {
             const introCard = document.getElementById('intro-card');
             const letterCard = document.getElementById('letter-card');
 
+            // 1. Animasi keluar kartu Intro
             introCard.style.transition = 'all 0.5s ease';
             introCard.style.opacity = '0';
             introCard.style.transform = 'scale(0.9)';
@@ -203,14 +283,29 @@
                 introCard.classList.add('hidden');
                 letterCard.classList.remove('hidden');
                 
+                // Reset kondisi kartu surat
                 letterCard.style.opacity = '0';
                 letterCard.style.transform = 'translateY(20px)';
                 
+                // 2. Lepaskan Balon
+                releaseBalloons();
+
                 void letterCard.offsetWidth;
 
+                // 3. Animasi masuk kartu surat
                 letterCard.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
                 letterCard.style.opacity = '1';
                 letterCard.style.transform = 'translateY(0)';
+
+                // 4. Animasi Teks Muncul Per Paragraf
+                const paragraphs = document.querySelectorAll('.reveal-text');
+                paragraphs.forEach((p, index) => {
+                    p.classList.remove('visible'); // Reset dulu
+                    setTimeout(() => {
+                        p.classList.add('visible');
+                    }, 400 + (index * 600)); // Delay bertingkat (600ms per paragraf)
+                });
+
             }, 400);
         }
 
@@ -225,26 +320,7 @@
             setTimeout(() => {
                 letterCard.classList.add('hidden');
                 introCard.classList.remove('hidden');
-                
                 void introCard.offsetWidth;
-
-                introCard.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
-                introCard.style.opacity = '1';
-                introCard.style.transform = 'scale(1)';
-            }, 400);
-        }
-    </script>
-</body>
-</html>n = 'all 0.5s ease';
-            letterCard.style.opacity = '0';
-            letterCard.style.transform = 'translateY(20px)';
-            
-            setTimeout(() => {
-                letterCard.classList.add('hidden');
-                introCard.classList.remove('hidden');
-                
-                void introCard.offsetWidth;
-
                 introCard.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
                 introCard.style.opacity = '1';
                 introCard.style.transform = 'scale(1)';
@@ -253,3 +329,4 @@
     </script>
 </body>
 </html>
+
