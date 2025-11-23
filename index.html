@@ -66,6 +66,23 @@
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #FFC4D6; border-radius: 10px; }
         body::-webkit-scrollbar { display: none; }
+        /* Modal popup styles */
+        .modal {
+            z-index: 50;
+            display: none;
+            position: fixed;
+            inset: 0;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.open {
+            display: flex;
+            animation: pop-in .3s cubic-bezier(.16,1,.3,1);
+        }
+        @keyframes pop-in {
+            0% { opacity: 0; transform: scale(0.95);}
+            100% { opacity: 1; transform: scale(1);}
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-soft-pink via-white to-rose-50 min-h-screen flex items-center justify-center overflow-hidden relative font-poppins selection:bg-pastel-pink selection:text-white">
@@ -83,14 +100,14 @@
             <!-- Foto Profil Area -->
             <div class="relative mx-auto mb-6 group">
                 <!-- Lingkaran Foto -->
-                <div class="w-32 h-32 mx-auto rounded-full bg-white p-1 shadow-lg ring-4 ring-pink-50 flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-105">
-                    
+                <div class="w-32 h-32 mx-auto rounded-full bg-white p-1 shadow-lg ring-4 ring-pink-50 flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-105 cursor-pointer"
+                    id="profile-photo-btn"
+                    title="Klik untuk perbesar foto"
+                >
                     <!-- GANTI FOTO DI SINI -->
-                    <!-- Cara ganti: Ubah 'https://images.unsplash.com/...' dengan nama file fotomu, misal 'hanifah.jpg' -->
                     <img src="Picsart_25-11-23_23-43-35-215.jpg" 
                          alt="Foto Hanifah" 
                          class="w-full h-full object-cover rounded-full hover:opacity-90 transition-opacity">
-                         
                 </div>
                 
                 <!-- Badge Level 24 -->
@@ -107,7 +124,7 @@
                 You reached level 24 this time! 🌟
             </p>
 
-            <button onclick="revealMessage()" class="group relative inline-flex items-center justify-center px-8 py-3.5 text-white transition-all duration-300 bg-pastel-pink rounded-full hover:bg-pastel-hover hover:shadow-lg hover:shadow-pink-200 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-200">
+            <button onclick="revealMessage()" class="group relative inline-flex items-center justify-center px-8 py-3.5 text-white transition-all duration-300 bg-pastel-pink rounded-full hover:bg-pastel-hover focus:outline-none shadow-lg shadow-pink-100/50 font-poppins">
                 <span class="font-medium tracking-wide text-sm md:text-base">Unlock Message</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-2 transition-transform duration-300 group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -119,28 +136,19 @@
         <!-- CARD 2: The Letter -->
         <div id="letter-card" class="hidden glass-panel rounded-[40px] p-8 md:p-10 text-center shadow-2xl shadow-pink-100/50">
             <div class="animate-fade-in">
-                
                 <div class="flex items-center justify-center space-x-2 mb-5">
                     <span class="h-px w-8 bg-pastel-pink"></span>
                     <span class="text-pastel-pink text-xl">✨</span>
                     <span class="h-px w-8 bg-pastel-pink"></span>
                 </div>
-
-                <!-- Isi Surat -->
                 <div class="text-muted-gray text-sm md:text-[0.95rem] leading-loose text-left space-y-4 bg-white/40 p-6 rounded-2xl border border-white mb-6 max-h-[60vh] overflow-y-auto custom-scroll">
                     <p class="font-playfair font-semibold text-dusty-rose text-lg">Hai,</p>
-                    
                     <p>Mungkin sudah lama aku tidak menuliskan sesuatu untukmu.</p>
-                    
-                    <p>Hari ini <span class="font-medium text-dusty-rose">sudah 24 Tahun berlalu</span>, setelah hari pertama kamu dilahirkan. Kamu mungkin salah satu manusia yang beruntung bisa dilahirkan di dunia, kamu tumbuh dan berkembang jadi sosok wanita yang <span class="italic text-dusty-rose">cantik dan hebat</span>.</p>
-                    
+                    <p>Hari ini <span class="font-medium text-dusty-rose">sudah 24 Tahun berlalu</span>, setelah hari pertama kamu dilahirkan. Kamu mungkin salah satu manusia yang beruntung bisa dilahirkan di dunia, dan semoga kamu tetap bersyukur.</p>
                     <p>Aku gatau pasti apa yang sebenarnya kamu inginkan atau butuhkan, tapi semoga semua hal-hal yang kamu inginkan lekas <span class="font-medium">segera terwujud dan tercapai ya</span>.</p>
-                    
-                    <p>Bahkan di usiamu yang semakin bertambah, aku masih saja belum memberikan hal-hal istimewa untukmu. Aku hanya bisa berharap dan berusaha untuk selalu <span class="italic">menjadi yang terbaik untukmu</span>.</p>
-                    
-                    <p class="pt-2 border-t border-pink-100">Terimakasih sudah ada sampai saat ini. Aku tidak tau apa yang harus aku tulis lagi, yang pasti sehat selalu, baik selalu, dan semoga senantiasa selalu dalam <span class="font-medium text-dusty-rose">perlindungan-Nya</span>.</p>
+                    <p>Bahkan di usiamu yang semakin bertambah, aku masih saja belum memberikan hal-hal istimewa untukmu. Aku hanya bisa berharap dan berusaha untuk selalu <span class="italic">menjadi yang baik buatmu</span>.</p>
+                    <p class="pt-2 border-t border-pink-100">Terimakasih sudah ada sampai saat ini. Aku tidak tau apa yang harus aku tulis lagi, yang pasti sehat selalu, baik selalu, dan semoga senantiasa dalam lindungan Tuhan. 🤍</p>
                 </div>
-
                 <button onclick="closeMessage()" class="text-sm text-dusty-rose hover:text-pastel-pink font-medium transition-colors underline underline-offset-4">
                     Tutup Kembali
                 </button>
@@ -149,7 +157,40 @@
 
     </main>
 
+    <!-- MODAL PHOTO POPUP -->
+    <div id="modal-overlay" class="modal fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+        <div class="relative">
+            <img src="Picsart_25-11-23_23-43-35-215.jpg" alt="Popup Hanifah" class="max-w-xs md:max-w-md rounded-3xl shadow-2xl border-4 border-white transition-all duration-300">
+            <button id="modal-close" aria-label="Close" class="absolute top-2 right-2 bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-1 shadow cursor-pointer border border-gray-200 transition-all">
+                <svg class="w-6 h-6 text-dusty-rose" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
     <script>
+        // Hide modal on load
+        document.getElementById("modal-overlay").classList.remove("open");
+
+        // Buka modal saat foto diklik
+        document.getElementById("profile-photo-btn").addEventListener("click", function() {
+            document.getElementById("modal-overlay").classList.add("open");
+        });
+
+        // Tutup modal saat tombol close diklik atau klik di overlay
+        document.getElementById("modal-close").addEventListener("click", function(event) {
+            event.stopPropagation();
+            document.getElementById("modal-overlay").classList.remove("open");
+        });
+
+        document.getElementById("modal-overlay").addEventListener("click", function(event) {
+            if (event.target === this) {
+                this.classList.remove("open");
+            }
+        });
+
+        // Animasi popup card tetap
         function revealMessage() {
             const introCard = document.getElementById('intro-card');
             const letterCard = document.getElementById('letter-card');
@@ -178,6 +219,23 @@
             const letterCard = document.getElementById('letter-card');
 
             letterCard.style.transition = 'all 0.5s ease';
+            letterCard.style.opacity = '0';
+            letterCard.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                letterCard.classList.add('hidden');
+                introCard.classList.remove('hidden');
+                
+                void introCard.offsetWidth;
+
+                introCard.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+                introCard.style.opacity = '1';
+                introCard.style.transform = 'scale(1)';
+            }, 400);
+        }
+    </script>
+</body>
+</html>n = 'all 0.5s ease';
             letterCard.style.opacity = '0';
             letterCard.style.transform = 'translateY(20px)';
             
